@@ -6,6 +6,13 @@ if [ "$EUID" -ne 0 ]
   exit 1
 fi
 
+### check if we run ubuntu
+osversion=$(grep ubuntu /etc/os-release)
+if [[ -z $osversion ]]; then
+  echo "OS is not Ubuntu, stopping"
+  exit 1
+fi
+
 ### check if files exist
 PRIVFILE=$(sudo find / -name MOK.priv 2> /dev/null)
 DERFILE=$(sudo find / -name MOK.der 2> /dev/null)

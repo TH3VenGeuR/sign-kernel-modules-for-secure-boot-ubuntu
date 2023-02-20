@@ -16,6 +16,13 @@ if [ "$EUID" -ne 0 ]
   exit 1
 fi
 
+### check if we run ubuntu
+osversion=$(grep ubuntu /etc/os-release)
+if [[ -z $osversion ]]; then
+  echo "OS is not Ubuntu, stopping"
+  exit 1
+fi
+
 ### Regex on the module name
 if [[ $1 =~ \.ko$ ]]; then
   modinfovar=$(echo $1 | sed s/\.[^.]*$//)
