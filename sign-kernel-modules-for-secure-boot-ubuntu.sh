@@ -73,4 +73,15 @@ read -sp "Passphrase to load private key:" KBUILD_SIGN_PIN
 
 cd /usr/lib/modules/$(uname -r)/updates/dkms
 sudo KBUILD_SIGN_PIN=$KBUILD_SIGN_PIN $SIGNEXEC sha256 $PRIVFILE $DERFILE $modsignvar
-cd - 
+cd - > /dev/null 2>&1
+
+### Verify if module is ready to be loaded
+modinfocmdbis=$(/usr/sbin/modinfo -F signer $modinfovar)
+if [[ -n $modinfocmdbis ]]; then
+  echo "Module kindly signed"
+  exit 0
+else
+  echo "Error, module not signed"
+fi
+
+
